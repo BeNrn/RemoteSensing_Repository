@@ -1,0 +1,90 @@
+---
+title: "Processing_LiDAR_data"
+author: "Ben Renne"
+date: "22 November 2018"
+output: html_document
+---
+
+###Setting up working environment
+```{r, message=FALSE}
+library(envimaR)
+root_folder = alternativeEnvi(root_folder = "~/edu/mpg-envinsys-plygrnd", 
+                              alt_env_id = "COMPUTERNAME",
+                              alt_env_value = "PCRZP", 
+                              alt_env_root_folder = "F:\\BEN\\edu")
+source(file.path(root_folder, "mpg-envinfosys-teams-2018-bjcm_rs_18/src/000_setup.R"))
+```
+
+###Proceed .las files
+Load files in a list
+```{r}
+las_files <- list.files(envrmt$path_lidar_org, pattern = glob2rx("*.las"),
+                        full.names = TRUE)
+```
+
+Write .lax files for the .las files
+```{r, eval=FALSE}
+for (f in las_files) {
+  writelax(f)
+}
+```
+
+Read files (example)
+```{r}
+#U4745630.las as example file in the presented path
+lidar_file <- readLAS(file.path(envrmt$path_lidar_org, "U4745630.las"))
+plot(lidar_file, bg ="white", color = "Z")
+```
+
+###Create a catalog
+Create a catalog and define its projection
+```{r}
+lcat <- catalog(envrmt$path_lidar_org)
+lcat@crs <- CRS("+init=epsg:25832")
+cores(lcat) <- 3L#how much cores of the computer are used
+tiling_size(lcat) = 500#size of the subtiles 
+
+plot(lcat)
+```
+
+###Define a catalog for the area of interest (AOI)
+Read the shapefile and define a bounding box around it
+```{r}
+aoi <- readOGR(file.path(envrmt$path_data_mof, "AOI_mofshape.shp"))#shapefile with the AOI
+aoi_bb <- bbox(aoi)#bounding box of shapefile
+lasclipRectangle(lcat, xleft = aoi_bb[1], ybottom = aoi_bb[2],
+                 xright = aoi_bb[3], ytop = aoi_bb[4],
+                 ofile = file.path(envrmt$path_tmp, "las_mof_aoi.las"))#write .las file
+```
+
+Create a.lax file for the AOI-LAS file and create a catalog for this area
+```{r}
+writelax(file.path(envrmt$path_tmp, "las_mof_aoi.las"))
+lcat <- catalog(file.path(envrmt$path_tmp, "las_mof_aoi.las"))
+lcat@crs <- CRS("+init=epsg:25832")
+cores(lcat) <- 3L
+tiling_size(lcat) = 500
+buffer(lcat) = 0#Output = one tile for the whole MOF
+```
+
+Retile the AOI.las into 500m parts
+```{r}
+lcat_tiled <- catalog_retile(lcat, envrmt$path_clip, "las_mof_aoi_")
+lcat_tiled@crs <- CRS("+init=epsg:25832")
+cores(lcat_tiled) = 3L
+tiling_size(lcat_tiled) = 500
+buffer(lcat_tiled) = 0#Output = retiled tile
+
+plot(lcat_tiled)
+```
+
+###Surface model
+Compute surface model with 0.5 m resolution and convert it to a raster object.
+```{r}
+lchm = grid_canopy(lcat_tiled, 0.5, subcircle = 0.2)
+lchmr = as.raster(lchm)
+crs(lchmr) = lcat@crs
+
+mapshot(mapview(lchmr), url = file.path(envrmt$path_clip, "lidar_dhm_map.html"))#.html file is written to the output location
+```
+

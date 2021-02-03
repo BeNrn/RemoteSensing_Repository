@@ -1,0 +1,80 @@
+---
+title: "Processing optical data"
+author: "Ben Renne"
+date: "16 November 2018"
+output: html_document
+---
+
+###Set working environment
+```{r working environment, message=FALSE}
+library(envimaR)
+root_folder = alternativeEnvi(root_folder = "~/edu/mpg-envinsys-plygrnd", 
+                              alt_env_id = "COMPUTERNAME",
+                              alt_env_value = "PCRZP", 
+                              alt_env_root_folder = "F:\\BEN\\edu")
+source(path.expand("~/edu/mpg-envinsys-plygrnd/mpg-envinfosys-teams-2018-bjcm_rs_18/src/000_setup.R"))
+```
+
+###Load links to images
+```{r}
+list_files <- list.files(paste0(envrmt$path_aerial_org), pattern = ".tif")
+list_files
+```
+
+###Load links to images in memory
+```{r}
+imagelist <- list()
+for (i in list_files) {
+  imagelist[[i]] <- brick(file.path(envrmt$path_aerial_org, i))
+}
+```
+
+###Rename files in list to assign every image to its position
+- position number is pasted in front of the file name
+```{r}
+for (j in seq(1:length(imagelist))) {
+  names(imagelist)[j] <- paste(j, list_files[j], sep = "_") 
+}
+```
+
+###Identify rojections
+```{r}
+projct <- c()#create an empty vector
+for (x in imagelist) {
+  v <- crs(x)#identify coordinate system
+  projct <- c(projct, v)
+}
+projct
+```
+
+###Load shapefile and check the coordinate system
+```{r}
+shape1 <- readOGR(file.path(envrmt$path_data_mof, "AOI_mofshape.shp"),
+                  layer = ogrListLayers(file.path(envrmt$path_data_mof, "AOI_mofshape.shp")))#normally "wcAbteilung.shp" should be loaded, but just a few "Abteilungen" are interested for the research question
+#should be automated with a loop
+
+crs(shape1)#check coordinate system of the shapefile
+```
+
+###Crop images on the extent of AOI
+```{r, eval=FALSE}
+cropped <- lapply(imagelist[3:length(imagelist)], crop, shape1)
+```
+
+###Mosaic overlapping images
+```{r, eval=FALSE}
+imagelist3_4 <- mosaic(cropped$`3_476000_5630000.tif`, cropped$`4_476000_5630000_1.tif`, fun="min",overwrite=FALSE, filename=paste0(envrmt$path_data_aerial_processe, "image3_4.tif"))
+
+imagelist5_6 <- mosaic(cropped$`5_476000_5632000.tif`, cropped$`6_476000_5632000_1.tif`, fun="min",overwrite=FALSE, filename=paste0(envrmt$path_data_aerial_processe, "image5_6.tif"))
+```
+
+###Merging of the images
+```{r, eval=FALSE}
+aoiimg <- merge(imagelist3_4, imagelist5_6, cropped$`7_478000_5630000.tif`, cropped$`8_478000_5632000.tif`, overwrite=FALSE, filename=paste0(envrmt$path_data_aerial_processe, "AOIimage.tif"))
+```
+
+###Plot the images and the cropped shape
+```{r}
+plotRGB(brick(file.path(envrmt$path_processed, "AOIimage.tif")))
+plot(shape1, add=TRUE, col = alpha("blue", alpha = 0.3))
+```
