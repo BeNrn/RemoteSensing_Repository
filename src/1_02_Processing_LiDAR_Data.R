@@ -1,13 +1,16 @@
 #Set working directory and load required packages
-library(envimaR)
-root_folder = alternativeEnvi(root_folder = "~/edu/mpg-envinsys-plygrnd", 
-                              alt_env_id = "COMPUTERNAME",
-                              alt_env_value = "PCRZP", 
-                              alt_env_root_folder = "F:\\BEN\\edu")
-source(file.path(root_folder, "mpg-envinfosys-teams-2018-bjcm_rs_18/src/000_setup.R"))
+# library(envimaR)
+# root_folder = alternativeEnvi(root_folder = "~/edu/mpg-envinsys-plygrnd", 
+#                               alt_env_id = "COMPUTERNAME",
+#                               alt_env_value = "PCRZP", 
+#                               alt_env_root_folder = "F:\\BEN\\edu")
+# source(file.path(root_folder, "mpg-envinfosys-teams-2018-bjcm_rs_18/src/000_setup.R"))
+library( rLiDAR)
+
+workingDir <- "D:/BEN/edu/data/"
 
 #get all LAS files in a folder
-las_files <- list.files(envrmt$path_lidar_org, pattern = glob2rx("*.las"),
+las_files <- list.files(paste0(workingDir, "lidar/org/"), pattern = glob2rx("*.las"),
                         full.names = TRUE)
 #write LAX for each LAS
 for (f in las_files) {
@@ -15,7 +18,7 @@ for (f in las_files) {
 }
 
 #read one single file
-lidar_file <- readLAS(file.path(envrmt$path_lidar_org, "U4745630.las"))
+lidar_file <- readLAS(file.path(paste0(workingDir, "lidar/org/", "U4745630.las")))
 plot(lidar_file, bg ="white", color = "Z")
 rm(lidar_file)
 
