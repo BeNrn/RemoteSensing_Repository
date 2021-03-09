@@ -1,17 +1,27 @@
-#Set working directory and load required packages
+#Script for processing LiDAR laser data 
+
+#-------------------------------------------------------------------------------
+#1 SET WORKING DIRECTORY AND LOAD PACKAGES
+#-------------------------------------------------------------------------------
+library(rLiDAR)
+
+#alternative using envimaR
 # library(envimaR)
 # root_folder = alternativeEnvi(root_folder = "~/edu/mpg-envinsys-plygrnd", 
 #                               alt_env_id = "COMPUTERNAME",
 #                               alt_env_value = "PCRZP", 
 #                               alt_env_root_folder = "F:\\BEN\\edu")
 # source(file.path(root_folder, "mpg-envinfosys-teams-2018-bjcm_rs_18/src/000_setup.R"))
-library( rLiDAR)
 
 workingDir <- "D:/BEN/edu/data/"
 
+#-------------------------------------------------------------------------------
+#2 PROCESS LiDAR DATA
+#-------------------------------------------------------------------------------
 #get all LAS files in a folder
 las_files <- list.files(paste0(workingDir, "lidar/org/"), pattern = glob2rx("*.las"),
                         full.names = TRUE)
+
 #write LAX for each LAS
 for (f in las_files) {
   writelax(f)

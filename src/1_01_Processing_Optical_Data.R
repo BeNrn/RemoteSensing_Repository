@@ -1,14 +1,23 @@
-#Set working directory and load required packages
+#Script for processing optical satellite/aerial data in the VIS spectrum
 
+#-------------------------------------------------------------------------------
+#1 SET WORKING DIRECTORY AND LOAD PACKAGES
+#-------------------------------------------------------------------------------
 library(raster)
+
+#alternative using envimaR
 # library(envimaR)
 # root_folder = alternativeEnvi(root_folder = "~/edu/mpg-envinsys-plygrnd",
 #                               alt_env_id = "COMPUTERNAME",
 #                               alt_env_value = "PCRZP",
 #                               alt_env_root_folder = "F:\\BEN\\edu")
 # source(file.path(root_folder, "mpg-envinfosys-teams-2018-bjcm_rs_18/src/000_setup.R"))
+
 workingDir <- "D:/BEN/edu/data/"
 
+#-------------------------------------------------------------------------------
+#2 PROCESS IMAGES
+#-------------------------------------------------------------------------------
 #search images
 #list_files <- list.files(file.path(envrmt$path_aerial_org), pattern = ".tif")
 list_files <- list.files(paste0(workingDir, "aerial/org/"), pattern = ".tif")
@@ -40,6 +49,9 @@ if (length(unique(projct))==1){
   print("at least one projection is different")
 }
 
+#-------------------------------------------------------------------------------
+#3 SHAPEFILE PROCESSING
+#-------------------------------------------------------------------------------
 #load shapefile
 shape1 <- readOGR(paste0(workingDir, "data_mof/", "AOI_mofshape.shp"),
                   layer = ogrListLayers(paste0(workingDir, "data_mof/", "AOI_mofshape.shp")))
@@ -49,6 +61,9 @@ crs(shape1)
 #assign crs of the tifs
 crs(shape1) <- projct[[1]]
 
+#-------------------------------------------------------------------------------
+#4 MERGE IMAGE AND SHAPEFILE
+#-------------------------------------------------------------------------------
 #crop images on the extent of MOF
 #the first two images are outside the bounding box
 cropped <- lapply(imagelist[3:length(imagelist)], crop, shape1)
@@ -61,6 +76,8 @@ imagelist5_6 <- mosaic(cropped$`5_476000_5632000.tif`, cropped$`6_476000_5632000
 #merging of the images (IMPORTANT when using this for the first time -> set overwrite = T)
 aoiimg <- merge(imagelist3_4, imagelist5_6, cropped$`7_478000_5630000.tif`, cropped$`8_478000_5632000.tif`, overwrite= T, filename=paste0(workingDir, "aerial/processed/", "AOIimage.tif"))
 
-#plot of the optical data
+#-------------------------------------------------------------------------------
+#5 PLOT
+#-------------------------------------------------------------------------------
 plotRGB(brick(paste0(workingDir, "aerial/processed/", "AOIimage.tif")))
 plot(shape1, add=TRUE)
