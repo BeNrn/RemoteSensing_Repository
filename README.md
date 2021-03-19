@@ -14,7 +14,7 @@
  The forest structure analysis incorporates not only the spatial information in direction of latitude and longitude but also in the direction of the vertical axis. This allows the determination of the tree height. Based on the three dimensional information, shannon entropy and descriptive statistics were calculated. The results allow the estimation of forest structure information. 
 
 ## 4 Tree species forcast
-
+The previous analysis steps combined can be used to develop a tree species forcasting algorithm. Utilizing an unsupervised random forest classification based on ground truth data return tree species estimations. To make the results more robust, the classification process is connected with a cross-validation.
 
 ## Sources
  - Dalponte, M. (2018): Individual Tree Crowns Segmentation. https://cran.r-project.org/web/packages/itcSegment/index.html. [Zugriff: 10.12.2018]
