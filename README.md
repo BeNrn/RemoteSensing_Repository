@@ -14,9 +14,10 @@
  The forest structure analysis incorporates not only the spatial information in direction of latitude and longitude but also in the direction of the vertical axis. This allows the determination of the tree height. Based on the three dimensional information, shannon entropy and descriptive statistics were calculated. The results allow the estimation of forest structure information. 
 
 ## 4 Tree species forcast
-The previous analysis steps combined can be used to develop a tree species forcasting algorithm. Utilizing an unsupervised random forest classification based on ground truth data return tree species estimations. To make the results more robust, the classification process is connected with a cross-validation.
+The previous analysis steps combined can be used to develop a tree species forcasting algorithm. Utilizing an unsupervised random forest classification based on ground truth data return tree species estimations. To providemore robust results, the classification process is connected with a cross-validation.
 
 ## Sources
- - Dalponte, M. (2018): Individual Tree Crowns Segmentation. https://cran.r-project.org/web/packages/itcSegment/index.html. [Zugriff: 10.12.2018]
- - Plowright, A. (2018): Analyzing Remotely Sensed Forest Data. https://cran.r-project.org/web/packages/ForestTools/index.html. [Zugriff: 10.12.2018]
- - Roussel, J.R.; Auty , D.; De Boissieu , F. & A. S. Meador (2018): Airborne LiDAR Data Manipulation and Visualization for Forestry Applications . https://cran.r-project.org/web/packages/lidR/index.html. [Zugriff: 10.12.2018]
+ - Dalponte, M. (2018): Individual Tree Crowns Segmentation. https://cran.r-project.org/web/packages/itcSegment/index.html. [Access: 10.12.2018]
+ - Meyer, H.; Reudenbach, C.; Ludwig, M.; Nauss, T.; Pebesma, E. (2021): CAST. caret' Applications for Spatial-Temporal Models. https://cran.r-project.org/web/packages/CAST/index.html [Access: 19.03.2021]
+ - Plowright, A. (2018): Analyzing Remotely Sensed Forest Data. https://cran.r-project.org/web/packages/ForestTools/index.html. [Access: 10.12.2018]
+ - Roussel, J.R.; Auty , D.; De Boissieu , F. & A. S. Meador (2018): Airborne LiDAR Data Manipulation and Visualization for Forestry Applications . https://cran.r-project.org/web/packages/lidR/index.html. [Access: 10.12.2018]
