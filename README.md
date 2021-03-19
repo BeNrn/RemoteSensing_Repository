@@ -16,6 +16,7 @@
 ## 4 Tree species forcast
 The previous analysis steps combined can be used to develop a tree species forcasting algorithm. Utilizing an unsupervised random forest classification based on ground truth data return tree species estimations. To providemore robust results, the classification process is connected with a cross-validation.
 
+### The resulting tree species map
 ![Image tree species map](./images/Species_Map.jpg)
 
 ## Sources
