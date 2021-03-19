@@ -11,8 +11,10 @@
   - lidR
  After comparing the three delineation algorithms, the trees in the study area were segmented with itcSegment. 
 ## 3 Forest structure analysis
+ The forest structure analysis incorporates not only the spatial information in direction of latitude and longitude but also in the direction of the vertical axis. This allows the determination of the tree height. Based on the three dimensional information, shannon entropy and descriptive statistics were calculated. The results allow the estimation of forest structure information. 
 
 ## 4 Tree species forcast
+
 
 ## Sources
  - Dalponte, M. (2018): Individual Tree Crowns Segmentation. https://cran.r-project.org/web/packages/itcSegment/index.html. [Zugriff: 10.12.2018]
