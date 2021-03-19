@@ -16,6 +16,8 @@
 ## 4 Tree species forcast
 The previous analysis steps combined can be used to develop a tree species forcasting algorithm. Utilizing an unsupervised random forest classification based on ground truth data return tree species estimations. To providemore robust results, the classification process is connected with a cross-validation.
 
+
+
 ## Sources
  - Dalponte, M. (2018): Individual Tree Crowns Segmentation. https://cran.r-project.org/web/packages/itcSegment/index.html. [Access: 10.12.2018]
  - Meyer, H.; Reudenbach, C.; Ludwig, M.; Nauss, T.; Pebesma, E. (2021): CAST. caret Applications for Spatial-Temporal Models. https://cran.r-project.org/web/packages/CAST/index.html [Access: 19.03.2021]
